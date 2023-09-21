@@ -1,0 +1,2 @@
+[cisLinuxServer]
+10.2.37.19	ansible_user=cisstudent

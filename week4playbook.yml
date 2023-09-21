@@ -1,0 +1,72 @@
+---
+- name: Week 4 Lab
+  hosts: all
+  gather_facts: false
+  tasks:
+
+# Step 1: Install software
+
+    - name: Install Google Chrome
+      ansible.builtin.dnf:
+        name: https://dl.google.com/linux/direct/google-chrome-stable_current_x86_64.rpm
+        state: latest
+        disable_gpg_check: true
+      become: true
+
+    - name: Install Firefox
+      ansible.builtin.dnf:
+        name: firefox
+        state: latest
+      become: true
+
+    - name: Install Git
+      ansible.builtin.dnf:
+        name: git
+        state: latest
+      become: true
+
+    - name: Install Apache
+      ansible.builtin.dnf:
+        name: httpd
+        state: latest
+      become: true
+
+    - name: Install MariaDB
+      ansible.builtin.dnf:
+        name: mariadb-server
+        state: latest
+      become: true
+
+# Step 2: Copy files
+
+    - name: Copy webserver files
+      ansible.builtin.copy:
+        src: ./webFiles/
+        dest: /var/www/html
+      become: true
+
+# Step 3: Remove chrome
+
+    - name: Remove Google Chrome
+      ansible.builtin.dnf:
+        name: google-chrome-stable
+        state: absent
+        autoremove: no
+      become: true
+
+# Step 4: Restart system
+
+    - name: Reboot the machine
+      ansible.builtin.reboot:
+        reboot_timeout: 3600
+      become: true
+
+# Step 5: Enable httpd
+
+    - name: Enable the httpd service
+      ansible.builtin.systemd:
+        name: httpd
+        enabled: true
+        masked: no
+      become: true
+      
